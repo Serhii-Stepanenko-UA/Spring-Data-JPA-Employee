@@ -1,0 +1,207 @@
+@startuml
+class org.example.app.entity.employee.EmployeeMapper {
++ Employee dtoCreateToEntity(EmployeeDtoRequest)
++ Employee dtoUpdateToEntity(Long,EmployeeDtoRequest,Employee)
+}
+
+class org.example.app.config.WebConfig {
++ void addResourceHandlers(ResourceHandlerRegistry)
+}
+
+class org.example.app.entity.employee.Employee {
+- Long id
+- String firstName
+- String lastName
+- String jobPosition
+- String phone
+}
+
+interface org.example.app.service.employee.EmployeeService {
+~ Employee create(EmployeeDtoRequest)
+~ Optional<List<Employee>> getAll()
+~ Employee getById(Long)
+~ Employee updateById(Long,EmployeeDtoRequest)
+~ boolean deleteById(Long)
+~ Employee findFirstByOrderByIdDesc()
+~ List<Employee> findByFirstName(String)
+~ List<Employee> findByLastName(String)
+}
+
+class org.example.app.dto.employee.EmployeeDtoCreateResponse {
+- int statusCode
+- String reasonPhrase
+- boolean success
+- String message
+- Employee employee
++ {static} String SUCCESS_MESSAGE
++ {static} String FAILURE_MESSAGE
++ {static} EmployeeDtoCreateResponse of(boolean,Employee)
++ String message()
++ int statusCode()
++ String reasonPhrase()
++ Employee employee()
++ boolean success()
+}
+
+
+class org.example.app.dto.employee.EmployeeDtoRequest {
+- Long id
+- String firstName
+- String lastName
+- String jobPosition
+- String phone
++ String lastName()
++ String firstName()
++ String phone()
++ String jobPosition()
++ Long id()
+}
+
+
+class org.example.app.controller.EmployeeController {
+- EmployeeService employeeService
++ ResponseEntity<EmployeeDtoCreateResponse> createEmployee(EmployeeDtoRequest)
++ ResponseEntity<EmployeeDtoListResponse> getAllEmployees()
++ ResponseEntity<EmployeeDtoGetByIdResponse> getEmployeeById(Long)
++ ResponseEntity<EmployeeDtoUpdateResponse> updateEmployeeById(Long,EmployeeDtoRequest)
++ ResponseEntity<EmployeeDtoDeleteResponse> deleteEmployeeById(Long)
++ ResponseEntity<EmployeeDtoGetLastEntityResponse> getLastEntity()
++ ResponseEntity<EmployeeDtoListResponse> getByFirstName(String)
++ ResponseEntity<EmployeeDtoListResponse> getByLastName(String)
+}
+
+
+class org.example.app.config.AppInitializer {
+# Class<?>[] getRootConfigClasses()
+# Class<?>[] getServletConfigClasses()
+# String[] getServletMappings()
+}
+
+class org.example.app.dto.employee.EmployeeDtoUpdateResponse {
+- int statusCode
+- String reasonPhrase
+- boolean success
+- String message
+- Employee employee
++ {static} String SUCCESS_MESSAGE
++ {static} String FAILURE_MESSAGE
++ {static} EmployeeDtoUpdateResponse of(Long,boolean,Employee)
++ String message()
++ int statusCode()
++ String reasonPhrase()
++ Employee employee()
++ boolean success()
+}
+
+
+class org.example.app.config.AppContext {
+- Environment env
++ LocalContainerEntityManagerFactoryBean entityManagerFactory()
++ DataSource dataSource()
+~ Properties hibernateProperties()
++ PlatformTransactionManager transactionManager()
+}
+
+
+class org.example.app.service.employee.EmployeeServiceImpl {
+- EmployeeMapper mapper
+- EmployeeRepository employeeRepository
++ Employee create(EmployeeDtoRequest)
++ Optional<List<Employee>> getAll()
++ Employee getById(Long)
++ Employee updateById(Long,EmployeeDtoRequest)
++ boolean deleteById(Long)
++ Employee findFirstByOrderByIdDesc()
++ List<Employee> findByFirstName(String)
++ List<Employee> findByLastName(String)
+}
+
+
+class org.example.app.dto.employee.EmployeeDtoDeleteResponse {
+- int statusCode
+- String reasonPhrase
+- boolean success
+- String message
++ {static} String SUCCESS_MESSAGE
++ {static} String FAILURE_MESSAGE
++ {static} EmployeeDtoDeleteResponse of(Long,boolean)
++ String message()
++ int statusCode()
++ String reasonPhrase()
++ boolean success()
+}
+
+
+interface org.example.app.repository.EmployeeRepository {
+~ Optional<Employee> findFirstByOrderByIdDesc()
+~ Optional<List<Employee>> findByFirstName(String)
+~ Optional<List<Employee>> findByLastName(String)
+}
+
+class org.example.app.dto.employee.EmployeeDtoGetLastEntityResponse {
+- int statusCode
+- String reasonPhrase
+- boolean success
+- String message
+- Employee employee
++ {static} String SUCCESS_MESSAGE
++ {static} String FAILURE_MESSAGE
++ {static} EmployeeDtoGetLastEntityResponse of(boolean,Employee)
++ String message()
++ int statusCode()
++ String reasonPhrase()
++ Employee employee()
++ boolean success()
+}
+
+
+class org.example.app.dto.employee.EmployeeDtoListResponse {
+- int statusCode
+- String reasonPhrase
+- boolean success
+- String message
+- List<Employee> employeeList
++ {static} String SUCCESS_MESSAGE
++ {static} String FAILURE_MESSAGE
++ {static} EmployeeDtoListResponse of(boolean,List<Employee>)
++ String message()
++ int statusCode()
++ String reasonPhrase()
++ boolean success()
++ List<Employee> employeeList()
+}
+
+
+interface org.example.app.service.BaseService {
+~ T create(S)
+~ Optional<List<T>> getAll()
+~ T getById(Long)
+~ T updateById(Long,S)
+~ boolean deleteById(Long)
+}
+
+class org.example.app.dto.employee.EmployeeDtoGetByIdResponse {
+- int statusCode
+- String reasonPhrase
+- boolean success
+- String message
+- Employee employee
++ {static} String SUCCESS_MESSAGE
++ {static} String FAILURE_MESSAGE
++ {static} EmployeeDtoGetByIdResponse of(Long,boolean,Employee)
++ String message()
++ int statusCode()
++ String reasonPhrase()
++ Employee employee()
++ boolean success()
+}
+
+
+
+
+org.springframework.web.servlet.config.annotation.WebMvcConfigurer <|.. org.example.app.config.WebConfig
+org.example.app.service.BaseService <|-- org.example.app.service.employee.EmployeeService
+org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer <|-- org.example.app.config.AppInitializer
+org.example.app.service.employee.EmployeeService <|.. org.example.app.service.employee.EmployeeServiceImpl
+org.springframework.data.jpa.repository.JpaRepository <|-- org.example.app.repository.EmployeeRepository
+@enduml
